@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace SocailMediaApp.ViewModels
+namespace SWeb.ViewModels
 {
     public class FollowRequestViewModel
     {

@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SocailMediaApp.Docs.PostExamples.CreatePost;
-using SocailMediaApp.Docs.PostExamples.DeletePost;
-using SocailMediaApp.Docs.PostExamples.GetSinglePost;
-using SocailMediaApp.Docs.PostExamples.GetUserHomePosts;
-using SocailMediaApp.Docs.PostExamples.GetUserPosts;
-using SocailMediaApp.Docs.PostExamples.UpdatePost;
-using SocailMediaApp.Exceptions;
-using SocailMediaApp.Services;
-using SocailMediaApp.Utils;
-using SocailMediaApp.ViewModels;
+using SWeb.Docs.PostExamples.CreatePost;
+using SWeb.Docs.PostExamples.DeletePost;
+using SWeb.Docs.PostExamples.GetSinglePost;
+using SWeb.Docs.PostExamples.GetUserHomePosts;
+using SWeb.Docs.PostExamples.GetUserPosts;
+using SWeb.Docs.PostExamples.UpdatePost;
+using SWeb.Exceptions;
+using SWeb.Services;
+using SWeb.Utils;
+using SWeb.ViewModels;
 using Swashbuckle.AspNetCore.Filters;
 using System.Net;
 
-namespace SocailMediaApp.Controllers
+namespace SWeb.Controllers
 {
     [Route("api/v1/posts")]
     public class PostController
@@ -51,7 +51,7 @@ namespace SocailMediaApp.Controllers
                 return apiResponse;
 
             }
-            catch(Exception e)
+            catch
             {
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = null;
@@ -75,7 +75,7 @@ namespace SocailMediaApp.Controllers
                 apiResponse.StatusCode = HttpStatusCode.OK;
                 return apiResponse;
             }
-            catch (Exception e)
+            catch
             {
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = null;
@@ -113,7 +113,7 @@ namespace SocailMediaApp.Controllers
                 apiResponse.StatusCode = HttpStatusCode.NotFound;
                 return apiResponse;
             }
-            catch (Exception e)
+            catch
             {
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = null;
@@ -149,7 +149,7 @@ namespace SocailMediaApp.Controllers
                 apiResponse.StatusCode = HttpStatusCode.NotFound;
                 return apiResponse;
             }
-            catch (Exception e)
+            catch
             {
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = null;
@@ -185,7 +185,7 @@ namespace SocailMediaApp.Controllers
                 apiResponse.StatusCode = HttpStatusCode.NotFound;
                 return apiResponse;
             }
-            catch (Exception e)
+            catch
             {
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = null;
@@ -223,7 +223,7 @@ namespace SocailMediaApp.Controllers
                 apiResponse.StatusCode = HttpStatusCode.NotFound;
                 return apiResponse;
             }
-            catch (Exception e)
+            catch
             {
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = null;
@@ -259,7 +259,7 @@ namespace SocailMediaApp.Controllers
                 apiResponse.StatusCode = HttpStatusCode.NotFound;
                 return apiResponse;
             }
-            catch (Exception e)
+            catch
             {
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = null;
@@ -297,7 +297,7 @@ namespace SocailMediaApp.Controllers
                 apiResponse.StatusCode = HttpStatusCode.NotFound;
                 return apiResponse;
             }
-            catch (Exception e)
+            catch
             {
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = null;

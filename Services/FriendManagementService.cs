@@ -1,9 +1,9 @@
-﻿using SocailMediaApp.Exceptions;
-using SocailMediaApp.Models;
-using SocailMediaApp.Repositories;
-using SocailMediaApp.ViewModels;
+﻿using SWeb.Exceptions;
+using SWeb.Models;
+using SWeb.Repositories;
+using SWeb.ViewModels;
 
-namespace SocailMediaApp.Services
+namespace SWeb.Services
 {
     public class FollowingManagementService
     {
@@ -78,6 +78,5 @@ namespace SocailMediaApp.Services
             });
             return userFriendViews;
         }
-
     }
 }

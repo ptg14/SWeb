@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace SocailMediaApp.Utils
+namespace SWeb.Utils
 {
     public class ApiResponse<T>
     {

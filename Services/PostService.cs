@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Hosting;
-using SocailMediaApp.Exceptions;
-using SocailMediaApp.Models;
-using SocailMediaApp.Repositories;
-using SocailMediaApp.ViewModels;
+using SWeb.Exceptions;
+using SWeb.Models;
+using SWeb.Repositories;
+using SWeb.ViewModels;
 
-namespace SocailMediaApp.Services
+namespace SWeb.Services
 {
     public class PostService
     {
@@ -72,7 +72,7 @@ namespace SocailMediaApp.Services
             convertedPost.Author = foundUser;
             convertedPost.Content = post.Content;
             convertedPost.PublishedOn = DateTime.Now;
-            if(post.Image != null)
+            if (post.Image != null)
             {
                 convertedPost.ImageUrl = await _imageService.UploadImage(post.Image);
             }
@@ -116,16 +116,16 @@ namespace SocailMediaApp.Services
             List<User> allUsers = await _userRepository.GetAllUsers();
             List<ReadPostViewModel> allPosts = new List<ReadPostViewModel>();
             List<ReadPostViewModel> nonFollowingPosts = new List<ReadPostViewModel>();
-            foreach(var user in allUsers)
+            foreach (var user in allUsers)
             {
-                if(user.Email.Equals(foundUser.Email))
+                if (user.Email.Equals(foundUser.Email))
                 {
                     continue;
                 }
                 List<ReadPostViewModel> posts = await GetPostsByUserId(user.Id);
                 if (followingListEmails.Contains(user.Email))
                 {
-                    foreach(var post in posts)
+                    foreach (var post in posts)
                     {
                         allPosts.Add(post);
                     }
@@ -142,15 +142,13 @@ namespace SocailMediaApp.Services
             return allPosts;
         }
 
-
-
         public async Task<List<ReadPostViewModel>> GetAllPosts()
         {
             List<Post> posts = await _postRepository.GetAllPosts();
             List<ReadPostViewModel> postViewModels = new List<ReadPostViewModel>();
             foreach (var post in posts)
             {
-                
+
                 ReadPostViewModel postViewModel = await GetReadPostViewModel(post);
 
                 postViewModels.Add(postViewModel);
@@ -191,7 +189,7 @@ namespace SocailMediaApp.Services
             if (foundPost == null)
                 throw new NotFoundException("Post not found");
             Comment? convertedComment = await _postRepository.GetCommendById(postId, comment.CommendtId);
-            if(convertedComment == null)
+            if (convertedComment == null)
                 throw new NotFoundException("Comment not found");
             convertedComment.Content = comment.Content;
             await _postRepository.UpdateCommentInPost(convertedComment, foundPost);
@@ -209,7 +207,6 @@ namespace SocailMediaApp.Services
             await _postRepository.DeleteCommendtFromPost(convertedComment, foundPost);
         }
 
-
         public async Task DeletePost(int id)
         {
             Post? foundPost = await _postRepository.GetPostById(id);
@@ -217,6 +214,5 @@ namespace SocailMediaApp.Services
                 throw new NotFoundException("Post not found");
             await _postRepository.DeletePost(id);
         }
-
     }
 }

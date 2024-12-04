@@ -1,9 +1,10 @@
-﻿using SocailMediaApp.Controllers;
-using SocailMediaApp.Exceptions;
-using SocailMediaApp.Models;
+﻿using SWeb.Controllers;
+using SWeb.Exceptions;
+using SWeb.Models;
 using Microsoft.EntityFrameworkCore;
+using CloudinaryDotNet.Core;
 
-namespace SocailMediaApp.Repositories
+namespace SWeb.Repositories
 {
     public class UserRepository
     {

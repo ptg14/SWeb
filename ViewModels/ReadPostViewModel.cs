@@ -1,4 +1,4 @@
-﻿namespace SocailMediaApp.ViewModels
+﻿namespace SWeb.ViewModels
 {
     public class ReadPostViewModel
     {

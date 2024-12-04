@@ -1,4 +1,4 @@
-namespace SocailMediaApp
+﻿namespace SWeb
 {
     public class WeatherForecast
     {

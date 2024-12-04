@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SocailMediaApp.ViewModels
+namespace SWeb.ViewModels
 {
     public class UserFriendViewModel
     {

@@ -1,8 +1,8 @@
-﻿using SocailMediaApp.Models;
-using Microsoft.EntityFrameworkCore;
-using SocailMediaApp.Exceptions;
+﻿using Microsoft.EntityFrameworkCore;
+using SWeb.Models;
+using SWeb.Exceptions;
 
-namespace SocailMediaApp.Repositories
+namespace SWeb.Repositories
 {
     public class PostRepository
     {
@@ -47,7 +47,7 @@ namespace SocailMediaApp.Repositories
             // Get the post with the comments
             var post = await _context.Posts.Include(p => p.Comments)
                                            .FirstOrDefaultAsync(p => p.Id == postId);
-            if(post == null)
+            if (post == null)
                 throw new NotFoundException("Post not found");
             return post.Comments;
         }

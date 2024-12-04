@@ -1,22 +1,19 @@
 using CloudinaryDotNet;
 using dotenv.net;
 using Microsoft.OpenApi.Models;
-using SocailMediaApp.Models;
-using SocailMediaApp.Repositories;
-using SocailMediaApp.Services;
 using Swashbuckle.AspNetCore.Filters;
-
-using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using dotenv.net;
 using Microsoft.EntityFrameworkCore;
-using SocailMediaApp;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
+using SWeb;
+using SWeb.Models;
+using SWeb.Repositories;
+using SWeb.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-
+builder.Services.AddRazorPages();
 
 // Set your Cloudinary credentials
 //=================================
@@ -31,10 +28,7 @@ builder.Services.AddSingleton(provider =>
     return cloudinary;
 });
 
-
-
 //=================================
-
 
 builder.Services.AddCors(options =>
 {
@@ -49,7 +43,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddDbContext<SocialMediaContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")),
-    ServiceLifetime.Scoped); // Set DbContext as singleton
+    ServiceLifetime.Scoped);
 
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<PostRepository>();
@@ -62,30 +56,27 @@ builder.Services.AddScoped<ImageService>();
 
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-    c.ExampleFilters(); 
-}); 
+    c.ExampleFilters();
+});
 builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
-
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.MapRazorPages();
 
 app.MapControllers();
 

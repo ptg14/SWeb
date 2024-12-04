@@ -1,7 +1,7 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 
-namespace SocailMediaApp.Services
+namespace SWeb.Services
 {
     public class ImageService
     {
@@ -41,7 +41,5 @@ namespace SocailMediaApp.Services
                 }
             } // Stream is automatically disposed here
         }
-
-
     }
 }

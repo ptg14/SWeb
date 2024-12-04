@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SocailMediaApp.Docs.FollowExamples.FollowUser;
-using SocailMediaApp.Docs.FollowingExamples.FollowUser;
-using SocailMediaApp.Exceptions;
-using SocailMediaApp.Services;
-using SocailMediaApp.Utils;
-using SocailMediaApp.ViewModels;
+using SWeb.Docs.FollowExamples.FollowUser;
+using SWeb.Docs.FollowingExamples.FollowUser;
+using SWeb.Exceptions;
+using SWeb.Services;
+using SWeb.Utils;
+using SWeb.ViewModels;
 using Swashbuckle.AspNetCore.Filters;
 using System.Net;
 
-namespace SocailMediaApp.Controllers
+namespace SWeb.Controllers
 {
     [Route("api/v1/follow-management")]
     public class FollowingController : ControllerBase
@@ -65,7 +65,7 @@ namespace SocailMediaApp.Controllers
                 apiResponse.StatusCode = HttpStatusCode.BadRequest;
                 return apiResponse;
             }
-            catch (Exception ex)
+            catch
             {
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = null;
@@ -112,7 +112,7 @@ namespace SocailMediaApp.Controllers
                 apiResponse.StatusCode = HttpStatusCode.BadRequest;
                 return apiResponse;
             }
-            catch (Exception ex)
+            catch
             {
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = null;
@@ -231,7 +231,7 @@ namespace SocailMediaApp.Controllers
                 apiResponse.StatusCode = HttpStatusCode.BadRequest;
                 return apiResponse;
             }
-            catch (Exception ex)
+            catch
             {
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = null;

@@ -1,4 +1,4 @@
-﻿namespace SocailMediaApp.Exceptions
+﻿namespace SWeb.Exceptions
 {
     public class MailConfirmationException : Exception
     {

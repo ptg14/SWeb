@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SocailMediaApp.Models;
+using Microsoft.Extensions.Hosting;
+using SWeb.Models;
 
-namespace SocailMediaApp
+namespace SWeb
 {
     public class SocialMediaContext : DbContext
     {

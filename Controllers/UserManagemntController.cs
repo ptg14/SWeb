@@ -1,18 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SocailMediaApp.Docs;
-using SocailMediaApp.Docs.AuthExamples.Login;
-using SocailMediaApp.Docs.AuthExamples.Registration;
-using SocailMediaApp.Docs.AuthExamples.Verification;
-using SocailMediaApp.Exceptions;
-using SocailMediaApp.Models;
-using SocailMediaApp.Services;
-using SocailMediaApp.Utils;
-using SocailMediaApp.ViewModels;
+using SWeb.Docs;
+using SWeb.Docs.AuthExamples.Login;
+using SWeb.Docs.AuthExamples.Registration;
+using SWeb.Docs.AuthExamples.Verification;
+using SWeb.Exceptions;
+using SWeb.Models;
+using SWeb.Services;
+using SWeb.Utils;
+using SWeb.ViewModels;
 using Swashbuckle.AspNetCore.Filters;
 using System.Net;
+using System.Diagnostics;
 
 
-namespace SocailMediaApp.Controllers
+namespace SWeb.Controllers
 {
 
     [Route("api/v1/users")]
@@ -42,7 +43,7 @@ namespace SocailMediaApp.Controllers
                 apiResponse.StatusCode = HttpStatusCode.OK;
                 return apiResponse;
             }
-            catch(Exception ex)
+            catch
             {
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = null;
@@ -104,6 +105,7 @@ namespace SocailMediaApp.Controllers
                 apiResponse.Body = null;
                 apiResponse.Message = "Error while sending mail to your account. Please register again";
                 apiResponse.StatusCode = HttpStatusCode.InternalServerError;
+                Debug.WriteLine(ex.Message);
                 return apiResponse;
             }
             catch (Exception ex)
@@ -172,7 +174,7 @@ namespace SocailMediaApp.Controllers
                 apiResponse.StatusCode = HttpStatusCode.NotFound;
                 return apiResponse;
             }
-            catch (Exception ex)
+            catch
             {
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = null;
@@ -230,7 +232,7 @@ namespace SocailMediaApp.Controllers
                 apiResponse.StatusCode = HttpStatusCode.NotFound;
                 return apiResponse;
             }
-            catch (Exception ex)
+            catch
             {
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = null;
@@ -271,7 +273,7 @@ namespace SocailMediaApp.Controllers
                 <div class='container'>
                     <h1>Email Confirmed!</h1>
                     <p>Your email address has been successfully verified. You can now proceed with the next steps.</p>
-                    <a href='/' class='button'>Go to Homepage</a>
+                    <a href='http://localhost:4200' class='button'>Go to Homepage</a>
                 </div>
             </body>
             </html>";
@@ -305,7 +307,7 @@ namespace SocailMediaApp.Controllers
                 <div class='container'>
                     <h1>Internal Server Error</h1>
                     <p>We encountered an issue while processing your request. Please try again later.</p>
-                    <a href='/' class='button'>Go to Homepage</a>
+                    <a href='http://localhost:4200' class='button'>Go to Homepage</a>
                 </div>
             </body>
             </html>";
