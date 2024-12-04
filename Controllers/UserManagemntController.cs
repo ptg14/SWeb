@@ -31,11 +31,11 @@ namespace SocailMediaApp.Controllers
         [ProducesResponseType(typeof(ApiResponse<Object>), StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetAllUsersSuccessfulResponseExample))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorDeleteCommentResponseExample))]
-        public ActionResult<ApiResponse<Object>> GetAllUsers()
+        public async Task<ActionResult<ApiResponse<Object>>> GetAllUsers()
         {
             try
             {
-                List<UserFriendViewModel> users = authService.GetAllUsers();
+                List<UserFriendViewModel> users = await authService.GetAllUsers();
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = users;
                 apiResponse.Message = "Users fetched!";
@@ -61,7 +61,7 @@ namespace SocailMediaApp.Controllers
         [SwaggerResponseExample(StatusCodes.Status201Created, typeof(RegisterSuccessResponseExample))]
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(RegisterValidationErrorResponseExample))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(RegisterInternalServerErrorResponseExample))]
-        public ActionResult<ApiResponse<Object>> Register([FromBody] RegisterUserViewModel user)
+        public async Task<ActionResult<ApiResponse<Object>>> Register([FromBody] RegisterUserViewModel user)
         {
             if (!ModelState.IsValid)
             {
@@ -83,7 +83,7 @@ namespace SocailMediaApp.Controllers
             }
             try
             {
-                authService.Register(user,HttpContext.Request);
+                await authService.Register(user,HttpContext.Request);
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = null;
                 apiResponse.Message = "User Registered, Check your mail to confirm";
@@ -127,7 +127,7 @@ namespace SocailMediaApp.Controllers
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(LoginValidationErrorResponseExample))]
         [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(LoginNotFoundErrorResponseExample))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(LoginInternalServerErrorResponseExample))]
-        public ActionResult<ApiResponse<Object>> Login([FromBody] LoginUserViewModel user)
+        public async Task<ActionResult<ApiResponse<Object>>> Login([FromBody] LoginUserViewModel user)
         {
             if (!ModelState.IsValid)
             {
@@ -149,7 +149,7 @@ namespace SocailMediaApp.Controllers
             }
             try
             {
-                ReturnedUserView returnedUser = authService.Login(user);
+                ReturnedUserView returnedUser = await authService.Login(user);
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
                 apiResponse.Body = returnedUser;
                 apiResponse.Message = "Login successful!";
@@ -193,7 +193,7 @@ namespace SocailMediaApp.Controllers
         [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(UpdateUserNotFoundResponseExample))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(UpdateUserInternalServerErrorResponseExample))]
        */
-        public ActionResult<ApiResponse<Object>> UpdateUser(int id, [FromForm] UpdateUserViewModel user)
+        public async Task<ActionResult<ApiResponse<Object>>> UpdateUser(int id, [FromForm] UpdateUserViewModel user)
         {
             if (!ModelState.IsValid)
             {
@@ -215,9 +215,9 @@ namespace SocailMediaApp.Controllers
             }
             try
             {
-                authService.UpdateUser(id, user);
+                string? profileImageUrl = await authService.UpdateUser(id, user);
                 ApiResponse<Object> apiResponse = new ApiResponse<Object>();
-                apiResponse.Body = null;
+                apiResponse.Body = profileImageUrl;
                 apiResponse.Message = "User Updated!";
                 apiResponse.StatusCode = HttpStatusCode.OK;
                 return apiResponse;
@@ -245,25 +245,80 @@ namespace SocailMediaApp.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(VerifySuccessResponseExample))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(VerifyInternalServerErrorResponseExample))]
-        public ActionResult<ApiResponse<Object>> Verify(int id)
+        public async Task<ActionResult> Verify(int id)
         {
             try
             {
-                authService.Verify(id);
-                ApiResponse<Object> apiResponse = new ApiResponse<Object>();
-                apiResponse.Body = null;
-                apiResponse.Message = "Email Confirmed!";
-                apiResponse.StatusCode = HttpStatusCode.OK;
-                return apiResponse;
+                await authService.Verify(id);
+
+                var htmlResponse = $@"
+            <!DOCTYPE html>
+            <html lang='en'>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Email Confirmation - Success</title>
+                <style>
+                    body {{ font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #e9f5f6; color: #333; }}
+                    .container {{ max-width: 600px; margin: auto; padding: 20px; background: #ffffff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }}
+                    h1 {{ color: #28a745; margin-top: 0; }}
+                    p {{ margin-bottom: 0; }}
+                    .button {{ display: inline-block; padding: 10px 20px; margin-top: 20px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 4px; }}
+                    .button:hover {{ background-color: #218838; }}
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <h1>Email Confirmed!</h1>
+                    <p>Your email address has been successfully verified. You can now proceed with the next steps.</p>
+                    <a href='/' class='button'>Go to Homepage</a>
+                </div>
+            </body>
+            </html>";
+
+                return new ContentResult
+                {
+                    Content = htmlResponse,
+                    ContentType = "text/html",
+                    StatusCode = (int)HttpStatusCode.OK
+                };
             }
             catch
             {
-                ApiResponse<Object> apiResponse = new ApiResponse<Object>();
-                apiResponse.Body = null;
-                apiResponse.Message = "Internal Server Error, Try again later";
-                apiResponse.StatusCode = HttpStatusCode.InternalServerError;
-                return apiResponse;
+                var htmlResponse = $@"
+            <!DOCTYPE html>
+            <html lang='en'>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Email Confirmation - Error</title>
+                <style>
+                    body {{ font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f2f4f7; color: #333; }}
+                    .container {{ max-width: 600px; margin: auto; padding: 20px; background: #ffffff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }}
+                    h1 {{ color: #dc3545; margin-top: 0; }}
+                    p {{ margin-bottom: 0; }}
+                    .button {{ display: inline-block; padding: 10px 20px; margin-top: 20px; background-color: #dc3545; color: #fff; text-decoration: none; border-radius: 4px; }}
+                    .button:hover {{ background-color: #c82333; }}
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <h1>Internal Server Error</h1>
+                    <p>We encountered an issue while processing your request. Please try again later.</p>
+                    <a href='/' class='button'>Go to Homepage</a>
+                </div>
+            </body>
+            </html>";
+
+                return new ContentResult
+                {
+                    Content = htmlResponse,
+                    ContentType = "text/html",
+                    StatusCode = (int)HttpStatusCode.InternalServerError
+                };
             }
         }
+
+
     }
 }
