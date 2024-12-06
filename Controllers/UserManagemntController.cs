@@ -252,7 +252,7 @@ namespace SWeb.Controllers
             try
             {
                 await authService.Verify(id);
-
+                var host = HttpContext.Request.Host.Value;
                 var htmlResponse = $@"
             <!DOCTYPE html>
             <html lang='en'>
@@ -273,7 +273,7 @@ namespace SWeb.Controllers
                 <div class='container'>
                     <h1>Email Confirmed!</h1>
                     <p>Your email address has been successfully verified. You can now proceed with the next steps.</p>
-                    <a href='http://localhost:4200' class='button'>Go to Homepage</a>
+                    <a href='http://{host}:9090' class='button'>Go to Homepage</a>
                 </div>
             </body>
             </html>";
@@ -287,6 +287,7 @@ namespace SWeb.Controllers
             }
             catch
             {
+                var host = HttpContext.Request.Host.Value;
                 var htmlResponse = $@"
             <!DOCTYPE html>
             <html lang='en'>
@@ -307,7 +308,7 @@ namespace SWeb.Controllers
                 <div class='container'>
                     <h1>Internal Server Error</h1>
                     <p>We encountered an issue while processing your request. Please try again later.</p>
-                    <a href='http://localhost:4200' class='button'>Go to Homepage</a>
+                    <a href='http://{host}:4200' class='button'>Go to Homepage</a>
                 </div>
             </body>
             </html>";

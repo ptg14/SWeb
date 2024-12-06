@@ -5,12 +5,19 @@ using Swashbuckle.AspNetCore.Filters;
 using CloudinaryDotNet.Actions;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using SWeb;
 using SWeb.Models;
 using SWeb.Repositories;
 using SWeb.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddFile(builder.Configuration.GetSection("Logging:File"));
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -32,13 +39,13 @@ builder.Services.AddSingleton(provider =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: "AllowAllOrigins",
-        configurePolicy: policy =>
-        {
-            policy.AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
+    options.AddPolicy("AllowAngularApp", policy =>
+    {
+        policy.WithOrigins("http://192.168.1.6:9090")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
 });
 
 builder.Services.AddDbContext<SocialMediaContext>(options =>
@@ -54,7 +61,6 @@ builder.Services.AddScoped<UserService>();
 
 builder.Services.AddScoped<ImageService>();
 
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -65,6 +71,32 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    var context = services.GetRequiredService<SocialMediaContext>();
+
+    try
+    {
+        var connectionString = context.Database.GetConnectionString();
+        var databaseProvider = context.Database.ProviderName;
+
+        logger.LogInformation("Database connection successful.");
+        logger.LogInformation($"Database Provider: {databaseProvider}");
+        logger.LogInformation($"Connection String: {connectionString}");
+
+        context.Database.OpenConnection();
+        context.Database.CloseConnection();
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while connecting to the database.");
+    }
+}
+
+app.UseCors("AllowAngularApp");
 
 if (app.Environment.IsDevelopment())
 {
