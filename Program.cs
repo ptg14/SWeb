@@ -39,7 +39,7 @@ builder.Services.AddSingleton(provider =>
 //=================================
 
 string? hostIpAddress = Dns.GetHostAddresses(Dns.GetHostName())
-                          .FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                          .FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork && !IPAddress.IsLoopback(ip))
                           ?.ToString();
 
 builder.Services.AddCors(options =>
@@ -88,6 +88,7 @@ using (var scope = app.Services.CreateScope())
         var connectionString = context.Database.GetConnectionString();
         var databaseProvider = context.Database.ProviderName;
 
+        logger.LogInformation($"IP of Frontend: http://{hostIpAddress}:9090");
         logger.LogInformation("Database connection successful.");
         logger.LogInformation($"Database Provider: {databaseProvider}");
         logger.LogInformation($"Connection String: {connectionString}");
