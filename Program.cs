@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net;
 using SWeb;
 using SWeb.Models;
 using SWeb.Repositories;
@@ -37,11 +38,15 @@ builder.Services.AddSingleton(provider =>
 
 //=================================
 
+string? hostIpAddress = Dns.GetHostAddresses(Dns.GetHostName())
+                          .FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                          ?.ToString();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
-        policy.WithOrigins("http://192.168.1.6:9090") //server IP
+        policy.WithOrigins($"http://{hostIpAddress}:9090") // dynamically set server IP
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
