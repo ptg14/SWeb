@@ -1,14 +1,11 @@
-﻿using CloudinaryDotNet.Actions;
-using CloudinaryDotNet;
-using System.Net.Mail;
-using BCrypt.Net;
-using CloudinaryDotNet.Core;
+﻿using System.Net.Mail;
 using SWeb.Exceptions;
 using SWeb.Models;
 using SWeb.Repositories;
 using SWeb.ViewModels;
 using System.Net;
-using System.Diagnostics;
+using Konscious.Security.Cryptography;
+using System.Text;
 
 namespace SWeb.Services
 {
@@ -41,6 +38,19 @@ namespace SWeb.Services
             return userFriendViewModels;
         }
 
+        private string HashPassword(string password)
+        {
+            var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password))
+            {
+                Salt = Encoding.UTF8.GetBytes("mynameisduongvanthang"),
+                DegreeOfParallelism = 8,
+                MemorySize = 1024 * 1024,
+                Iterations = 4
+            };
+
+            return Convert.ToBase64String(argon2.GetBytes(16));
+        }
+
         public async Task Register(RegisterUserViewModel user, HttpRequest httpRequest)
         {
             User? foundUser = await _userRepository.GetUserByEmail(user.Email);
@@ -53,7 +63,7 @@ namespace SWeb.Services
             {
                 Email = user.Email,
                 Name = user.Name,
-                Password = BCrypt.Net.BCrypt.HashPassword(user.Password),
+                Password = HashPassword(user.Password),
                 Address = user.Address,
                 Phone = user.Phone
             };
@@ -104,6 +114,20 @@ namespace SWeb.Services
             }
         }
 
+        private bool VerifyPassword(string password, string hashedPassword)
+        {
+            var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password))
+            {
+                Salt = Encoding.UTF8.GetBytes("mynameisduongvanthang"),
+                DegreeOfParallelism = 8,
+                MemorySize = 1024 * 1024,
+                Iterations = 4
+            };
+
+            var hashToCompare = Convert.ToBase64String(argon2.GetBytes(16));
+            return hashToCompare == hashedPassword;
+        }
+
         public async Task<ReturnedUserView> Login(LoginUserViewModel user)
         {
 
@@ -113,7 +137,7 @@ namespace SWeb.Services
                 throw new NotFoundException("Credentials are wrong!");
             }
 
-            bool matchingPassword = BCrypt.Net.BCrypt.Verify(user.Password, foundUser.Password);
+            bool matchingPassword = VerifyPassword(user.Password, foundUser.Password);
             if (!matchingPassword)
             {
                 throw new InvalidException("Credentials are wrong!");
@@ -165,7 +189,7 @@ namespace SWeb.Services
             if (user.Name != null)
                 foundUser.Name = user.Name;
             if (user.Password != null)
-                foundUser.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                foundUser.Password = HashPassword(user.Password);
             if (user.Phone != null)
                 foundUser.Phone = user.Phone;
             if (user.Address != null)

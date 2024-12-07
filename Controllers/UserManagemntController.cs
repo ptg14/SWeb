@@ -4,7 +4,6 @@ using SWeb.Docs.AuthExamples.Login;
 using SWeb.Docs.AuthExamples.Registration;
 using SWeb.Docs.AuthExamples.Verification;
 using SWeb.Exceptions;
-using SWeb.Models;
 using SWeb.Services;
 using SWeb.Utils;
 using SWeb.ViewModels;
@@ -17,6 +16,7 @@ namespace SWeb.Controllers
 {
 
     [Route("api/v1/users")]
+    [ApiController]
     public class UserManagemntController : ControllerBase
     {
         private UserService authService;

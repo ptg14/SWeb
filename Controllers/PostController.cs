@@ -15,6 +15,7 @@ using System.Net;
 namespace SWeb.Controllers
 {
     [Route("api/v1/posts")]
+    [ApiController]
     public class PostController
     {
         private PostService _postService;

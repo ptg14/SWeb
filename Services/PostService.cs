@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-using SWeb.Exceptions;
+﻿using SWeb.Exceptions;
 using SWeb.Models;
 using SWeb.Repositories;
 using SWeb.ViewModels;

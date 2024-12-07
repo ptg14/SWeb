@@ -11,6 +11,7 @@ using System.Net;
 namespace SWeb.Controllers
 {
     [Route("api/v1/follow-management")]
+    [ApiController]
     public class FollowingController : ControllerBase
     {
         private FollowingManagementService _followingManagementService;

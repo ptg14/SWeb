@@ -1,8 +1,6 @@
-﻿using SWeb.Controllers;
-using SWeb.Exceptions;
+﻿using SWeb.Exceptions;
 using SWeb.Models;
 using Microsoft.EntityFrameworkCore;
-using CloudinaryDotNet.Core;
 
 namespace SWeb.Repositories
 {

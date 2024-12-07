@@ -2,14 +2,9 @@ using CloudinaryDotNet;
 using dotenv.net;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
-using CloudinaryDotNet.Actions;
 using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using SWeb;
-using SWeb.Models;
 using SWeb.Repositories;
 using SWeb.Services;
 
@@ -46,7 +41,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
-        policy.WithOrigins($"http://{hostIpAddress}:9090") // dynamically set server IP
+        policy.WithOrigins($"http://{hostIpAddress}:8000") // dynamically set server IP
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -88,7 +83,7 @@ using (var scope = app.Services.CreateScope())
         var connectionString = context.Database.GetConnectionString();
         var databaseProvider = context.Database.ProviderName;
 
-        logger.LogInformation($"IP of Frontend: http://{hostIpAddress}:9090");
+        logger.LogInformation($"IP of Frontend: http://{hostIpAddress}:8000");
         logger.LogInformation("Database connection successful.");
         logger.LogInformation($"Database Provider: {databaseProvider}");
         logger.LogInformation($"Connection String: {connectionString}");
