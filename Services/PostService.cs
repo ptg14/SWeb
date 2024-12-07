@@ -1,4 +1,5 @@
-﻿using SWeb.Exceptions;
+﻿using Ganss.Xss;
+using SWeb.Exceptions;
 using SWeb.Models;
 using SWeb.Repositories;
 using SWeb.ViewModels;
@@ -10,6 +11,7 @@ namespace SWeb.Services
         private PostRepository _postRepository;
         private UserRepository _userRepository;
         private ImageService _imageService;
+        private HtmlSanitizer _htmlSanitizer;
         public PostService(PostRepository postRepository, UserRepository userRepository, ImageService imageService)
         {
             _postRepository = postRepository;
@@ -69,7 +71,7 @@ namespace SWeb.Services
                 throw new NotFoundException("User not found");
             convertedPost.UserId = post.UserId;
             convertedPost.Author = foundUser;
-            convertedPost.Content = post.Content;
+            convertedPost.Content = _htmlSanitizer.Sanitize(post.Content); ;
             convertedPost.PublishedOn = DateTime.Now;
             if (post.Image != null)
             {
@@ -160,7 +162,7 @@ namespace SWeb.Services
             Post? foundPost = await _postRepository.GetPostById(id);
             if (foundPost == null)
                 throw new NotFoundException("Post not found");
-            foundPost.Content = post.Content;
+            foundPost.Content = _htmlSanitizer.Sanitize(post.Content);
             await _postRepository.UpdatePost(foundPost);
         }
 
@@ -176,7 +178,7 @@ namespace SWeb.Services
             Comment convertedComment = new Comment();
             convertedComment.UserId = comment.UserId;
             convertedComment.Author = foundUser;
-            convertedComment.Content = comment.Content;
+            convertedComment.Content = _htmlSanitizer.Sanitize(comment.Content);
             convertedComment.PublishedOn = DateTime.Now;
             convertedComment.PostId = postId;
             foundPost.Comments.Add(convertedComment);
@@ -190,7 +192,7 @@ namespace SWeb.Services
             Comment? convertedComment = await _postRepository.GetCommendById(postId, comment.CommendtId);
             if (convertedComment == null)
                 throw new NotFoundException("Comment not found");
-            convertedComment.Content = comment.Content;
+            convertedComment.Content = _htmlSanitizer.Sanitize(comment.Content);
             await _postRepository.UpdateCommentInPost(convertedComment, foundPost);
         }
 
